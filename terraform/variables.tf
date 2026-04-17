@@ -52,9 +52,3 @@ variable "root_domain" {
   default     = ""
 }
 
-// Added by Alex
-variable "openai_api_key" {
-  description = "OpenAI API Key"
-  type        = string
-  sensitive   = true  # prevents it from showing in plan/apply output
-}
