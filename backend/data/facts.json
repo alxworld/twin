@@ -1,0 +1,21 @@
+{
+  "full_name": "Alex",
+  "name": "Alex",
+  "current_role": "SRE",
+  "location": "Chennai",
+  "email": "jsalex@gmail.com",
+  "linkedin": "linkedin.com/in/alex",
+  "specialties": [
+    "Your specialty 1",
+    "Your specialty 2",
+    "Your specialty 3"
+  ],
+  "years_experience": 10,
+  "education": [
+    {
+      "degree": "BE Degree",
+      "institution": "Sastra University",
+      "year": "2002"
+    }
+  ]
+}
