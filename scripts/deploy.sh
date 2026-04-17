@@ -6,6 +6,29 @@ PROJECT_NAME=${2:-twin}
 
 echo "🚀 Deploying ${PROJECT_NAME} to ${ENVIRONMENT}..."
 
+# 0. Check for required environment variables
+if [ -z "$OPENAI_API_KEY" ]; then
+  echo "❌ Error: OPENAI_API_KEY environment variable is not set"
+  exit 1
+fi
+
+# 0.1 Check for AWS CLI if not installed
+if ! command -v aws &> /dev/null; then
+  echo "❌ Error: AWS CLI is not installed. Please install it to proceed."
+  exit 1
+fi
+
+# 0.2 Check for Terraform if not installed
+if ! command -v terraform &> /dev/null; then
+  echo "❌ Error: Terraform is not installed. Please install it to proceed."
+  exit 1
+fi
+
+# 0.3 remove old build artifacts
+echo "🧹 Cleaning up old build artifacts..."
+rm -rf backend/lambda-package
+rm -f backend/lambda-deployment.zip
+
 # 1. Build Lambda package
 cd "$(dirname "$0")/.."        # project root
 echo "📦 Building Lambda package..."
@@ -13,7 +36,15 @@ echo "📦 Building Lambda package..."
 
 # 2. Terraform workspace & apply
 cd terraform
-terraform init -input=false
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+AWS_REGION=${DEFAULT_AWS_REGION:-us-east-1}
+OPENAI_API_KEY=${OPENAI_API_KEY}
+terraform init -input=false \
+  -backend-config="bucket=twin-terraform-state-${AWS_ACCOUNT_ID}" \
+  -backend-config="key=${ENVIRONMENT}/terraform.tfstate" \
+  -backend-config="region=${AWS_REGION}" \
+  -backend-config="dynamodb_table=twin-terraform-locks" \
+  -backend-config="encrypt=true"
 
 if ! terraform workspace list | grep -q "$ENVIRONMENT"; then
   terraform workspace new "$ENVIRONMENT"
