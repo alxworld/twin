@@ -63,7 +63,10 @@ jobs:
           # Set environment variables for the script
           export AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
           export DEFAULT_AWS_REGION=${{ secrets.DEFAULT_AWS_REGION }}
-          export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          export TF_VAR_OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          export OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          export TF_VAR_github_repository=alxworld/twin
+          
 
           # Make script executable and run it
           chmod +x scripts/deploy.sh
