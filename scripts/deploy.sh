@@ -4,7 +4,7 @@ set -e
 ENVIRONMENT=${1:-dev}          # dev | test | prod
 PROJECT_NAME=${2:-twin}
 
-echo "🚀 Deploying ${PROJECT_NAME} to ${ENVIRONMENT}..."
+echo "🚀🚀 Deploying ${PROJECT_NAME} to ${ENVIRONMENT}..."
 
 # 0. Check for required environment variables
 if [ -z "$OPENAI_API_KEY" ]; then
